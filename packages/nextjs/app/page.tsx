@@ -1,13 +1,20 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address } from "~~/components/scaffold-eth";
+import { Address, Balance } from "~~/components/scaffold-eth";
+import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
+import { ContractName } from "~~/utils/scaffold-eth/contract";
+import { useAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
+  const contractsData = useAllContracts();
+  const contractNames = useMemo(() => Object.keys(contractsData) as ContractName[], [contractsData]);
+  const { data: deployedContractData } = useDeployedContractInfo(contractNames[0]);
 
   return (
     <>
@@ -20,6 +27,14 @@ const Home: NextPage = () => {
           <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
             <p className="my-2 font-medium">Connected Address:</p>
             <Address address={connectedAddress} />
+          </div>
+          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
+            <p className="my-2 font-medium">Balance:</p>
+            <Balance address={connectedAddress} />
+          </div>
+          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">{contractNames}</div>
+          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
+            {deployedContractData?.address}
           </div>
 
           <p className="text-center text-lg">
