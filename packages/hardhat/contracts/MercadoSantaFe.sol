@@ -121,6 +121,9 @@ contract MercadoSantaFe {
     }
 
     /// Public View functions -----------------------------------------------------------
+    function getUserLoanIds(address _account) external view returns (uint256[MAX_LOANS_BY_USER] memory) {
+        return users[_account].loanIds;
+    }
 
     /// @dev Duration of the loan, divided by the number of intervals.
     function getIntervalDuration(uint256 _loanId) external view returns (uint256) {

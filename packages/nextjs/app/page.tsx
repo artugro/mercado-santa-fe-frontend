@@ -1,84 +1,201 @@
 "use client";
 
-import { useMemo } from "react";
-import Link from "next/link";
+import { ContractWrite } from "./debug/_components/contract/ContractWrite";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Address, Balance } from "~~/components/scaffold-eth";
-import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
+import { BalanceCurrency } from "~~/components/scaffold-eth";
+import { useDeployedContractInfo, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
-import { useAllContracts } from "~~/utils/scaffold-eth/contractsData";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
-  const contractsData = useAllContracts();
-  const contractNames = useMemo(() => Object.keys(contractsData) as ContractName[], [contractsData]);
-  const { data: deployedContractData } = useDeployedContractInfo(contractNames[0]);
+
+  const USDCToken: ContractName = "USDCToken";
+  const XOCToken: ContractName = "XOCToken";
+  const MercadoSantaFe: ContractName = "MercadoSantaFe";
+  const getUserLoanIds = "getUserLoanIds";
+  const getLoan = "getLoan";
+
+  const { data: USDCTokenContractInfo } = useDeployedContractInfo(USDCToken);
+  const { data: XOCTokenContractInfo } = useDeployedContractInfo(XOCToken);
+  const { data: MercadoSantaFeContractInfo } = useDeployedContractInfo(MercadoSantaFe);
+
+  const { data: getUserLoanIdsData } = useScaffoldReadContract({
+    contractName: MercadoSantaFe,
+    functionName: getUserLoanIds,
+    args: [connectedAddress],
+  });
+
+  console.log(getUserLoanIdsData);
+
+  // If userloanid is 0 don't call otherwise map each id and append to an array of loan data
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: getLoanData } = useScaffoldReadContract({
+    contractName: MercadoSantaFe,
+    functionName: getLoan,
+    args: [1n],
+  });
+
+  interface TokenBalance {
+    contractName: string;
+    contractAddress: string | undefined;
+    currencyCode: string;
+  }
+
+  const tokenBalances: TokenBalance[] = [
+    {
+      contractName: USDCToken,
+      contractAddress: USDCTokenContractInfo?.address,
+      currencyCode: "USD",
+    },
+    {
+      contractName: XOCToken,
+      contractAddress: XOCTokenContractInfo?.address,
+      currencyCode: "MXN",
+    },
+  ];
 
   return (
     <>
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
+      <div className="token-balances-container">
+        {tokenBalances.map((token, index) => (
+          <div key={index} className="token-card">
+            <div className="token-card-header">
+              <h2 className="token-card-title">{token.contractName}</h2>
+            </div>
+            <div className="token-card-content">
+              <p className="my-2 font-medium">Balance:</p>
+              <BalanceCurrency address={token.contractAddress} currencyCode={token.currencyCode} />
+            </div>
           </div>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
+        ))}
+        <style jsx>{`
+          .token-balances-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+          }
+
+          @media (min-width: 640px) {
+            .token-balances-container {
+              flex-direction: row;
+            }
+          }
+
+          .token-card {
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+          }
+
+          .token-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+          }
+
+          .token-card-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+          }
+
+          .token-card-content {
+            padding: 1.25rem 1.5rem;
+          }
+
+          .token-balance {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+          }
+        `}</style>
+      </div>
+      <div className="loan-detail-container">
+        <div className="p-5 divide-y divide-base-300 loan-card">
+          <ContractWrite deployedContractData={MercadoSantaFeContractInfo} />
+        </div>
+        <div className="p-5 divide-y divide-base-300 loan-card">
+          <button className="accordion">Section 1</button>
+          <div></div>
+          <div className="loan-card-header">
+            <h2 className="token-card-title"></h2>
+          </div>
+          <div className="loan-card-content">
             <p className="my-2 font-medium">Balance:</p>
-            <Balance address={connectedAddress} />
-          </div>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">{contractNames}</div>
-          <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
-            {deployedContractData?.address}
-          </div>
-
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/app/page.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
-
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
           </div>
         </div>
+        <style jsx>{`
+          .loan-detail-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+          }
+
+          @media (min-width: 640px) {
+            .loan-detail-container {
+              flex-direction: row;
+            }
+          }
+
+          .loan-card {
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+          }
+
+          .loan-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+          }
+
+          .loan-card-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+          }
+
+          .loan-card-content {
+            padding: 1.25rem 1.5rem;
+          }
+
+          /* Style the buttons that are used to open and close the accordion panel */
+          .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: 0.4s;
+          }
+
+          /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+          .active,
+          .accordion:hover {
+            background-color: #ccc;
+          }
+
+          /* Style the accordion panel. Note: hidden by default */
+          .panel {
+            padding: 0 18px;
+            background-color: white;
+            display: none;
+            overflow: hidden;
+          }
+        `}</style>
       </div>
     </>
   );

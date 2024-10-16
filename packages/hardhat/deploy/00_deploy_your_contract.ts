@@ -22,6 +22,8 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   */
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
+  const userAddress = "0x203Aa96f8559a2DF928Ba442F1aDD66a9c9092Df";
+  const MLARGE = ethers.parseEther("1000000000000000");
 
   await deploy("USDCToken", {
     from: deployer,
@@ -78,8 +80,14 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   });
   await hre.ethers.getContract<Contract>("MercadoSantaFe", deployer);
 
-  await USDCToken.allocateTo(deployer, ethers.parseEther("10"));
-  await XOCToken.allocateTo(deployer, ethers.parseEther("10"));
+  await USDCToken.allocateTo(deployer, ethers.parseUnits("1000000", 6));
+  await XOCToken.allocateTo(deployer, ethers.parseEther("1000000"));
+
+  await USDCToken.allocateTo(userAddress, ethers.parseUnits("1000000", 6));
+  // await XOCToken.allocateTo(userAddress, ethers.parseEther("1000000"));
+  /// Deposit liquidity.
+  await XOCToken.approve(BodegaDeChocolates.target, MLARGE);
+  await BodegaDeChocolates.deposit(await XOCToken.balanceOf(deployer), deployer);
 
   console.log("👋 Initial greeting");
 };
