@@ -2,7 +2,7 @@ import { Abi, AbiFunction } from "abitype";
 import { WriteFunctionForm } from "~~/app/debug/_components/contract";
 import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
-export const ContractWrite = ({ deployedContractData }: { deployedContractData: Contract<ContractName> }) => {
+export const ContractWrite = ({ deployedContractData }: { deployedContractData: Contract<ContractName> | any }) => {
   if (!deployedContractData) {
     return null;
   }
