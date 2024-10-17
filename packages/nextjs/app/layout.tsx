@@ -10,6 +10,7 @@ export const metadata = getMetadata({
 });
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+  localStorage.theme = "light";
   return (
     <html suppressHydrationWarning>
       <body>
