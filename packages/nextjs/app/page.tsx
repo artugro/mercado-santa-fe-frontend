@@ -10,10 +10,10 @@ import { ContractName } from "~~/utils/scaffold-eth/contract";
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
-  const USDCToken: ContractName = "USDCToken";
-  const XOCToken: ContractName = "XOCToken";
+  const USDCToken: ContractName = "USDC";
+  const XOCToken: ContractName = "XOC";
   const MercadoSantaFe: ContractName = "MercadoSantaFe";
-  const getUserLoanIds = "getUserLoanIds";
+  const getUserLoanIds = "getUsersLoanIds";
   const getLoan = "getLoan";
 
   const { data: USDCTokenContractInfo } = useDeployedContractInfo(USDCToken);
@@ -35,6 +35,7 @@ const Home: NextPage = () => {
     functionName: getLoan,
     args: [1n],
   });
+  console.log(getLoanData);
 
   interface TokenBalance {
     contractName: string;
@@ -54,6 +55,48 @@ const Home: NextPage = () => {
       currencyCode: "MXN",
     },
   ];
+
+  type Loan = {
+    id: number;
+    amount: number;
+    totalPayment: number;
+    installments: number;
+    apy: number;
+    duration: string;
+    attachedCollateral: string;
+  };
+
+  const loans: Loan[] = [
+    {
+      id: 1,
+      amount: 10000,
+      totalPayment: 11500,
+      installments: 12,
+      apy: 5.5,
+      duration: "1 year",
+      attachedCollateral: "None",
+    },
+    {
+      id: 2,
+      amount: 200000,
+      totalPayment: 250000,
+      installments: 360,
+      apy: 3.2,
+      duration: "30 years",
+      attachedCollateral: "Property",
+    },
+    {
+      id: 3,
+      amount: 25000,
+      totalPayment: 28000,
+      installments: 60,
+      apy: 4.7,
+      duration: "5 years",
+      attachedCollateral: "Vehicle",
+    },
+  ];
+
+  const loanIdentifiers = ["Amount", "Total Payment", "Installments", "APY", "Duration", "Attached Collateral"];
 
   return (
     <>
@@ -121,13 +164,43 @@ const Home: NextPage = () => {
           <ContractWrite deployedContractData={MercadoSantaFeContractInfo} />
         </div>
         <div className="p-5 divide-y divide-base-300 loan-card">
-          <button className="accordion">Section 1</button>
-          <div></div>
           <div className="loan-card-header">
-            <h2 className="token-card-title"></h2>
+            <h2 className="loan-card-title">Loan summary</h2>
           </div>
           <div className="loan-card-content">
-            <p className="my-2 font-medium">Balance:</p>
+            <div className="container mx-auto">
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="border border-gray-300 px-4 py-2 text-left">Concept</th>
+                      {loans.map((loan, index) => (
+                        <th key={loan.id} className="border border-gray-300 px-4 py-2 text-left">
+                          Loan {index + 1}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loanIdentifiers.map((identifier, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-2 font-medium">{identifier}</td>
+                        {loans.map(loan => (
+                          <td key={loan.id} className="border border-gray-300 px-4 py-2">
+                            {identifier === "Amount" && `$${loan.amount.toLocaleString()}`}
+                            {identifier === "Total Payment" && `$${loan.totalPayment.toLocaleString()}`}
+                            {identifier === "Installments" && loan.installments}
+                            {identifier === "APY" && `${loan.apy}%`}
+                            {identifier === "Duration" && loan.duration}
+                            {identifier === "Attached Collateral" && loan.attachedCollateral}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         <style jsx>{`
@@ -167,33 +240,6 @@ const Home: NextPage = () => {
 
           .loan-card-content {
             padding: 1.25rem 1.5rem;
-          }
-
-          /* Style the buttons that are used to open and close the accordion panel */
-          .accordion {
-            background-color: #eee;
-            color: #444;
-            cursor: pointer;
-            padding: 18px;
-            width: 100%;
-            text-align: left;
-            border: none;
-            outline: none;
-            transition: 0.4s;
-          }
-
-          /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-          .active,
-          .accordion:hover {
-            background-color: #ccc;
-          }
-
-          /* Style the accordion panel. Note: hidden by default */
-          .panel {
-            padding: 0 18px;
-            background-color: white;
-            display: none;
-            overflow: hidden;
           }
         `}</style>
       </div>
