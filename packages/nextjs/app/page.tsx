@@ -10,13 +10,16 @@ import { ContractName } from "~~/utils/scaffold-eth/contract";
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
-  const USDCToken: ContractName = "USDC";
-  const XOCToken: ContractName = "XOC";
+  const USDCToken: ContractName = "USDCToken";
+  const XOCToken: ContractName = "XOCToken";
   const MercadoSantaFe: ContractName = "MercadoSantaFe";
   const getUserLoanIds = "getUsersLoanIds";
   const getLoan = "getLoan";
 
+  // collat method from mercado santa fe
   const { data: USDCTokenContractInfo } = useDeployedContractInfo(USDCToken);
+
+  //
   const { data: XOCTokenContractInfo } = useDeployedContractInfo(XOCToken);
   const { data: MercadoSantaFeContractInfo } = useDeployedContractInfo(MercadoSantaFe);
 

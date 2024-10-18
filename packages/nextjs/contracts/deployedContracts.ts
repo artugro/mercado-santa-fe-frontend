@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     BodegaDeChocolates: {
-      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      address: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
       abi: [
         {
           inputs: [
@@ -224,6 +224,11 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "InvalidInput",
+          type: "error",
+        },
+        {
+          inputs: [],
           name: "MathOverflowedMulDiv",
           type: "error",
         },
@@ -398,19 +403,6 @@ const deployedContracts = {
           type: "event",
         },
         {
-          inputs: [],
-          name: "acceptingNewLoans",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
           inputs: [
             {
               internalType: "address",
@@ -474,6 +466,25 @@ const deployedContracts = {
         {
           inputs: [],
           name: "availableAsset",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "availableBalance",
           outputs: [
             {
               internalType: "uint256",
@@ -576,6 +587,26 @@ const deployedContracts = {
             },
           ],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "finishWithdraw",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "headQueueWOS",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -736,6 +767,19 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "pendingForWOS",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -815,6 +859,19 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "_amount",
+              type: "uint256",
+            },
+          ],
+          name: "receivePayment",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "shares",
               type: "uint256",
             },
@@ -862,6 +919,19 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "tailQueueWOS",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
           name: "totalAssets",
           outputs: [
             {
@@ -876,6 +946,19 @@ const deployedContracts = {
         {
           inputs: [],
           name: "totalInCDP",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalInWOS",
           outputs: [
             {
               internalType: "uint256",
@@ -968,6 +1051,32 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "address",
+              name: "_mercado",
+              type: "address",
+            },
+          ],
+          name: "updateMercado",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "waitingOrders",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "uint256",
               name: "assets",
               type: "uint256",
@@ -992,6 +1101,30 @@ const deployedContracts = {
             },
           ],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "wos",
+          outputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
       ],
@@ -1027,7 +1160,7 @@ const deployedContracts = {
       },
     },
     MercadoSantaFe: {
-      address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      address: "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
       abi: [
         {
           inputs: [
@@ -1045,6 +1178,11 @@ const deployedContracts = {
               internalType: "contract IPriceFeed",
               name: "_collatToPesosOracle",
               type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_minCollateralAmount",
+              type: "uint256",
             },
           ],
           stateMutability: "nonpayable",
@@ -1080,17 +1218,16 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
-          name: "ApyGreaterThanLimit",
+          name: "ApyGreaterThanAccepted",
           type: "error",
         },
         {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "_initialLtv",
-              type: "uint256",
-            },
-          ],
+          inputs: [],
+          name: "CollatLessThanAmount",
+          type: "error",
+        },
+        {
+          inputs: [],
           name: "CollateralBellowMaxLtv",
           type: "error",
         },
@@ -1111,14 +1248,8 @@ const deployedContracts = {
           type: "error",
         },
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "_token",
-              type: "address",
-            },
-          ],
-          name: "InvalidCollateral",
+          inputs: [],
+          name: "InvalidBasisPoint",
           type: "error",
         },
         {
@@ -1128,7 +1259,7 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "InvalidLoanAPY",
+          name: "InvalidIntervalDuration",
           type: "error",
         },
         {
@@ -1153,6 +1284,22 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "LessThanMinCollatAmount",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_loanId",
+              type: "uint256",
+            },
+          ],
+          name: "LoanDoesNotExist",
+          type: "error",
+        },
+        {
+          inputs: [],
           name: "LoanIsFullyPaid",
           type: "error",
         },
@@ -1168,7 +1315,7 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "NotAcceptingNewLoans",
+          name: "NegativeNumber",
           type: "error",
         },
         {
@@ -1178,7 +1325,7 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "NotEnoughCollateral",
+          name: "NotEnoughCollatToBorrow",
           type: "error",
         },
         {
@@ -1235,6 +1382,19 @@ const deployedContracts = {
               internalType: "uint16",
               name: "",
               type: "uint16",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "MIN_CREDIT_AMOUNT",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -1332,7 +1492,7 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
-          stateMutability: "pure",
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -1422,6 +1582,54 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "_amount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint16",
+              name: "_ltvBp",
+              type: "uint16",
+            },
+          ],
+          name: "estimateLoanAmount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_amount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint16",
+              name: "_ltvBp",
+              type: "uint16",
+            },
+          ],
+          name: "estimateLoanCollat",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "_account",
               type: "address",
@@ -1436,6 +1644,19 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getFixedLoanFee",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "pure",
           type: "function",
         },
         {
@@ -1574,6 +1795,38 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "getMaxLoansPerUser",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_amount",
+              type: "address",
+            },
+          ],
+          name: "getUserCollat",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "address",
@@ -1600,7 +1853,7 @@ const deployedContracts = {
               type: "address",
             },
           ],
-          name: "getUserLoanIds",
+          name: "getUsersLoanIds",
           outputs: [
             {
               internalType: "uint256[3]",
@@ -1631,60 +1884,6 @@ const deployedContracts = {
             {
               internalType: "uint256",
               name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          name: "loans",
-          outputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "totalPayment",
-              type: "uint256",
-            },
-            {
-              internalType: "uint8",
-              name: "installments",
-              type: "uint8",
-            },
-            {
-              internalType: "uint16",
-              name: "apy",
-              type: "uint16",
-            },
-            {
-              internalType: "uint256",
-              name: "createdAt",
-              type: "uint256",
-            },
-            {
-              internalType: "uint32",
-              name: "duration",
-              type: "uint32",
-            },
-            {
-              internalType: "uint256",
-              name: "attachedCollateral",
               type: "uint256",
             },
           ],
