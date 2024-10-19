@@ -78,7 +78,10 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     // automatically mining the contract deployment transaction. There is no effect on live networks.
     autoMine: true,
   });
-  await hre.ethers.getContract<Contract>("MercadoSantaFe", deployer);
+  const MercadoSantaFe = await hre.ethers.getContract<Contract>("MercadoSantaFe", deployer);
+
+  // Bonding the Mercado and the Bodega.
+  await BodegaDeChocolates.updateMercado(MercadoSantaFe.target);
 
   await USDCToken.allocateTo(deployer, ethers.parseUnits("1000000", 6));
   await XOCToken.allocateTo(deployer, ethers.parseEther("1000000"));
